@@ -6,33 +6,22 @@ import Implicits._
 case class ImprovedInterpreter(expr: String) extends PlusInterpreter {
   var pos = 0
 
-  override def nextToken(): Option[Token] = {
-    nextToken(Nil)
-  }
-
-  def nextToken(ints: List[Char]): Option[Token] = {
+  def nextToken(): Option[Token] = {
     if (pos > expr.length - 1) {
-      if (ints.nonEmpty)
-        IntToken(ints.reverse.mkString.toInt)
-      else {
-        pos += 1
-        EOFToken
-      }
+      EOFToken
     } else {
+      val number = """\d+""".r
       expr(pos) match {
-        case c if c.isDigit => pos += 1; nextToken(c :: ints)
-        case _ if ints.nonEmpty =>
-          IntToken(ints.reverse.mkString.toInt)
-        case '+' =>
-          pos += 1
-          PlusToken
-        case _ =>
-          pos += 1
-          None
+        case c if c.isDigit => {
+          val ints = number.findFirstIn(expr.substring(pos)).get
+          pos += ints.length
+          IntToken(ints.toInt)
+        }
+        case '+' => pos += 1; PlusToken
+        case _ => pos += 1; None
       }
     }
   }
-
 }
 
 object TestImprovedInterpreter extends App {
