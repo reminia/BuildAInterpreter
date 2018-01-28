@@ -1,4 +1,4 @@
-import Implicits._
+package part1
 
 /**
   * Created by slee on 2018/1/27.

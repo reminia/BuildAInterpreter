@@ -1,4 +1,4 @@
-import Implicits._
+package part1
 
 import scala.reflect.ClassTag
 
