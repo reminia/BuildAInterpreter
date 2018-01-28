@@ -1,11 +1,13 @@
 import Implicits._
+
+import scala.reflect.ClassTag
 /**
   * Created by slee on 2018/1/27.
   */
 sealed trait Token {
-  def get[T]: Option[T] = {
+  def get[T: ClassTag]: Option[T] = {
     this match {
-      case (a: T) => a.asInstanceOf[T]
+      case t: T => t
       case _ => None
     }
   }
@@ -24,10 +26,17 @@ object Test extends App {
     case EOFToken =>  println("eof")
     case _ => throw new Exception("unrecognized character")
   }
-  println(t.isInstanceOf[IntToken])
-  val value = t match {
-    case a: IntToken => a.asInstanceOf[IntToken].value
+
+  //type erase of T
+  def f[T](t: Token): Option[T] = {
+    t match {
+      case _:T  => t.asInstanceOf[T] //always true
+      case _ => None
+    }
   }
-  println(value)
+
+  val e: Token = EOFToken
+  println(e.get[IntToken])
+  println (f[IntToken](e))
 }
 

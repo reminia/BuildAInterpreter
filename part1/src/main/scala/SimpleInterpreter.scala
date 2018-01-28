@@ -25,7 +25,7 @@ case class SimpleInterpreter(expr: String) extends PlusInterpreter {
 }
 
 object TestInterpreter extends App {
-  println(SimpleInterpreter("1+3").interpret())
+  println(SimpleInterpreter("a1a+3").interpret())
   println(SimpleInterpreter("1+2").interpret())
   println(SimpleInterpreter("1+34").interpret()) //non recognize long ints
   println(SimpleInterpreter("1-2").interpret()) //non recognize -
