@@ -1,7 +1,7 @@
 /**
   * Created by slee on 2018/1/27.
   */
-trait PlusInterpreter {
+trait Interpreter {
 
   val expr: String
 
@@ -10,10 +10,10 @@ trait PlusInterpreter {
   def interpret(): Option[Int] = {
     for {
       left <- nextToken().flatMap(_.get[IntToken])
-      plus <- nextToken().flatMap(_.get[PlusToken.type])
+      ops <- nextToken().flatMap(_.get[Operator])
       right <- nextToken().flatMap(_.get[IntToken])
     } yield {
-      left.value + right.value
+      ops(left.value, right.value)
     }
   }
 

@@ -3,7 +3,7 @@ import Implicits._
 /**
   * Created by slee on 2018/1/27.
   */
-case class ImprovedInterpreter(expr: String) extends PlusInterpreter {
+case class ImprovedInterpreter(expr: String) extends Interpreter {
   var pos = 0
 
   def nextToken(): Option[Token] = {
@@ -18,7 +18,8 @@ case class ImprovedInterpreter(expr: String) extends PlusInterpreter {
           IntToken(ints.toInt)
         }
         case ' ' => pos += 1; nextToken()
-        case '+' => pos += 1; PlusToken
+        case '+' => pos += 1; PlusOperator
+        case '-' => pos += 1; MinusOperator
         case _ => pos += 1; None
       }
     }
@@ -35,5 +36,10 @@ object TestImprovedInterpreter extends App {
   println(ImprovedInterpreter(" 1234    + 23  ").interpret())
   println(ImprovedInterpreter(" 23 + 2 3  ").interpret())
   println(ImprovedInterpreter("12 34 + 23").interpret())
+
+  //test a-b
+  println(ImprovedInterpreter(" 23 - 3").interpret())
+  println(ImprovedInterpreter(" 23 - 34").interpret())
+  println(ImprovedInterpreter("3-2").interpret())
 
 }
