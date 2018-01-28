@@ -17,6 +17,7 @@ case class ImprovedInterpreter(expr: String) extends PlusInterpreter {
           pos += ints.length
           IntToken(ints.toInt)
         }
+        case ' ' => pos += 1; nextToken()
         case '+' => pos += 1; PlusToken
         case _ => pos += 1; None
       }
@@ -31,4 +32,8 @@ object TestImprovedInterpreter extends App {
   println(ImprovedInterpreter("12+23").interpret())
   println(ImprovedInterpreter("1234+23").interpret())
   println(ImprovedInterpreter("1234 + 23").interpret())
+  println(ImprovedInterpreter(" 1234    + 23  ").interpret())
+  println(ImprovedInterpreter(" 23 + 2 3  ").interpret())
+  println(ImprovedInterpreter("12 34 + 23").interpret())
+
 }
