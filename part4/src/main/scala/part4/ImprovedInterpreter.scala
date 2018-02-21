@@ -6,47 +6,34 @@ package part4
 case class ImprovedInterpreter(expr: String) extends Interpreter {
   var pos = 0
 
-  var current: Option[Token] = None
+  var op: Option[Token] = None
 
-  def exp(t: Option[IntToken]): Option[IntToken] = {
-    val plus = current.flatMap(_.get[Plus.type])
-    val minus = current.flatMap(_.get[Minus.type])
-    if (plus.nonEmpty || minus.nonEmpty) {
-      val res: Option[IntToken] = for {
-        a <- t
-        op <- current.flatMap(_.get[Operator])
-        b <- term(factor())
-      } yield {
-        op(a.value, b.value)
-      }
-      exp(res)
-    } else {
-      t
+  def exp(t: IntToken): IntToken = {
+    val result = op match {
+      case Some(Plus) => Some(Plus(t, term(factor())))
+      case Some(Minus) => Some(Minus(t, term(factor())))
+      case _ => None
     }
+    result.fold(t)(exp(_))
   }
 
-  def term(fact: Option[IntToken]): Option[IntToken] = {
-    current = nextToken()
-    val mult = current.flatMap(_.get[Multiplication.type])
-    val divide = current.flatMap(_.get[Divide.type])
-    if (mult.nonEmpty || divide.nonEmpty) {
-      val res: Option[IntToken] = for {
-        a <- fact
-        op <- current.flatMap(_.get[Operator])
-        b <- factor()
-      } yield {
-        op(a.value, b.value)
-      }
-      term(res)
-    } else {
-      fact
+  def term(a: IntToken): IntToken = {
+    op = nextToken()
+    val result = op match {
+      case Some(Multiplication) => Some(Multiplication(a, factor()))
+      case Some(Divide) => Some(Divide(a, factor()))
+      case _ => None
     }
+    result.fold(a)(term(_))
   }
 
-  def factor() = nextToken().flatMap(_.get[IntToken])
+  def factor(): IntToken = nextToken() match {
+    case Some(a@IntToken(v)) => a
+    case _ => throw new Exception("a factor(int) was expected")
+  }
 
-  override def interpret(): Option[Int] = {
-    exp(term(factor())).map(_.value)
+  override def interpret(): Int = {
+    exp(term(factor())).value
   }
 
   def nextToken(): Option[Token] = {
@@ -71,25 +58,25 @@ case class ImprovedInterpreter(expr: String) extends Interpreter {
 
 object TestImprovedInterpreter extends App {
 
-  println(part4.ImprovedInterpreter("2+3 ").interpret())
-  println(part4.ImprovedInterpreter("12+3").interpret())
-  println(part4.ImprovedInterpreter("12+23").interpret())
-  println(part4.ImprovedInterpreter("1234+23").interpret())
-  println(part4.ImprovedInterpreter("1234 + 23").interpret())
-  println(part4.ImprovedInterpreter(" 1234    + 23  ").interpret())
-  println(part4.ImprovedInterpreter("3-2").interpret())
-  println(part4.ImprovedInterpreter("3*2").interpret())
-  println(part4.ImprovedInterpreter("3 / 2").interpret())
-
+  logger(part4.ImprovedInterpreter("2+3 ").interpret())
+  logger(part4.ImprovedInterpreter("12+3").interpret())
+  logger(part4.ImprovedInterpreter("12+23").interpret())
+  logger(part4.ImprovedInterpreter("1234+23").interpret())
+  logger(part4.ImprovedInterpreter("1234 + 23").interpret())
+  logger(part4.ImprovedInterpreter(" 1234    + 23  ").interpret())
+  logger(part4.ImprovedInterpreter("3-2").interpret())
+  logger(part4.ImprovedInterpreter("3*2").interpret())
+  logger(part4.ImprovedInterpreter("3 / 2").interpret())
   //test a - b + c ...
-  println(part4.ImprovedInterpreter("23 - 3 + 4 - 5").interpret())
-  println(part4.ImprovedInterpreter(" 23 - 3 + 4 - 5").interpret())
-  println(part4.ImprovedInterpreter("2 + 3 --4").interpret())
-  println(part4.ImprovedInterpreter("2 + 3 --").interpret())
-  println(part4.ImprovedInterpreter("3*5/6").interpret())
-  println(part4.ImprovedInterpreter("3*5+2").interpret())
-  println(part4.ImprovedInterpreter("3-5*2").interpret())
-  println(part4.ImprovedInterpreter("3/5*2-3*1").interpret())
-  println(part4.ImprovedInterpreter("3+5-2-3").interpret())
+
+  logger(part4.ImprovedInterpreter("23 - 3 + 4 - 5").interpret())
+  logger(part4.ImprovedInterpreter(" 23 - 3 + 4 - 5").interpret())
+  logger(part4.ImprovedInterpreter("2 + 3 --4").interpret())
+  logger(part4.ImprovedInterpreter("2 + 3 --").interpret())
+  logger(part4.ImprovedInterpreter("3*5/6").interpret())
+  logger(part4.ImprovedInterpreter("3*5+2").interpret())
+  logger(part4.ImprovedInterpreter("3-5*2").interpret())
+  logger(part4.ImprovedInterpreter("3/5*2-3*1").interpret())
+  logger(part4.ImprovedInterpreter("3+5-2-3").interpret())
 
 }

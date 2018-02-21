@@ -9,15 +9,7 @@ trait Interpreter {
 
   def pos: Int
 
-  def interpret(): Option[Int] = {
-    for {
-      left <- nextToken().flatMap(_.get[IntToken])
-      ops <- nextToken().flatMap(_.get[Operator])
-      right <- nextToken().flatMap(_.get[IntToken])
-    } yield {
-      ops(left.value, right.value)
-    }
-  }
+  def interpret(): Int
 
   def nextToken(): Option[Token]
 }
