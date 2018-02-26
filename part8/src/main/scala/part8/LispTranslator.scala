@@ -9,13 +9,7 @@ object LispTranslator {
   def traverse(ast: AST): String = ast match {
     case Number(v) => s"$v"
     case BinOp(a, b, op) =>
-      val operator = op match {
-        case Plus => "+"
-        case Minus => "-"
-        case Multiplication => "*"
-        case Divide => "/"
-      }
-      s"($operator ${traverse(a)} ${traverse(b)})"
+      s"($op ${traverse(a)} ${traverse(b)})"
   }
 
   def main(args: Array[String]) {

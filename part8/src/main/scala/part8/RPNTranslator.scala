@@ -13,13 +13,7 @@ object RPNTranslator {
   def traverse(ast: AST): String = ast match {
     case Number(v) => s"$v"
     case BinOp(left, right, op) =>
-      val operator = op match {
-        case Plus => "+"
-        case Minus => "-"
-        case Multiplication => "*"
-        case Divide => "/"
-      }
-      s"${traverse(left)} ${traverse(right)} $operator"
+      s"${traverse(left)} ${traverse(right)} $op"
   }
 
   def main(args: Array[String]) {

@@ -14,12 +14,14 @@ abstract class Operator extends Token {
 }
 
 object Plus extends Operator {
+
   override def apply(a: Int, b: Int): Int = a + b
 
   override def toString = "+"
 }
 
 object Minus extends Operator {
+
   override def apply(a: Int, b: Int): Int = a - b
 
   override def toString = "-"

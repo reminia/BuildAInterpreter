@@ -14,4 +14,6 @@ case class BinOp(left: AST, right: AST, op: Operator) extends AST {
   override def toString: String = s"$op($left, $right)"
 }
 
-case class UnaryOp(op: Operator, value: AST) extends AST
+case class UnaryOp(op: Operator, value: AST) extends AST {
+  override def toString: String = s"($op $value)"
+}

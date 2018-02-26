@@ -88,9 +88,13 @@ object TestImprovedInterpreter extends App {
   logger(ImprovedInterpreter("1*(2+3)+4/5").interpret())
   logger(ImprovedInterpreter(" 1 * (2+3) + 8 / 5 ").parse())
   logger(ImprovedInterpreter(" 1 * (2+3) + 8 / 5 ").interpret())
+  logger(ImprovedInterpreter(" -1 * (2+3) + 8 / 5 ").parse())
   logger(ImprovedInterpreter(" -1 * (2+3) + 8 / 5 ").interpret())
+  logger(ImprovedInterpreter("--1").parse())
   logger(ImprovedInterpreter("--1").interpret())
+  logger(ImprovedInterpreter("-(1+2)").parse())
   logger(ImprovedInterpreter("-(1+2)").interpret())
+  logger(ImprovedInterpreter("--+3").parse())
   logger(ImprovedInterpreter("--+3").interpret())
 
 }
